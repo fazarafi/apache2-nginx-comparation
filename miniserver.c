@@ -10,6 +10,7 @@ int total_clients = 0;  // Total number of connected clients
 
 void accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
 void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
+char* readFile(char *filename);
 
 int main()
 {
@@ -123,26 +124,68 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents){
   {
     printf("message:%s\n",buffer);
   }
-
-  #define CHUNK 1024 /* read 1024 bytes at a time */
-  char buf[CHUNK];
-  FILE *file;
-  size_t nread;
-
-  file = fopen("test_1.html", "r");
-  if (file) {
-      while ((nread = fread(buf, 1, sizeof buf, file)) > 0)
-          fwrite(buf, 1, nread, stdout);
-      if (ferror(file)) {
-          /* deal with error */
-      }
-      fclose(file);
+  printf("%s",buffer);
+  
+  char* httpHeader = 
+      "HTTP/1.1 200 OK\n"
+      "Content-type: text/html\n"
+      "\n";
+  
+  
+  char *externalHtml = readFile("test_2.html");
+  
+  if (externalHtml)
+  {
+      char* httpResponse;
+      httpResponse = malloc(strlen(httpHeader)+1+strlen(externalHtml)); 
+      strcpy(httpResponse, httpHeader);
+      strcat(httpResponse,externalHtml);
+      
+      int len = strlen(httpResponse);
+      send(watcher->fd, httpResponse, len, 0);
+      bzero(buffer, read);
+      
+      free(httpResponse);
+      free(externalHtml);
   }
+}
 
-  printf("%s\n",buf);
-  strncpy(buffer, buf, BUFFER_SIZE);
-  // Send message bach to the client
-  send(watcher->fd, buffer, read, 0);
-  bzero(buffer, read);
+char* readFile(char *filename)
+{
+   char *buffer = NULL;
+   int string_size, read_size;
+   FILE *handler = fopen(filename, "r");
 
+   if (handler)
+   {
+       // Seek the last byte of the file
+       fseek(handler, 0, SEEK_END);
+       // Offset from the first to the last byte, or in other words, filesize
+       string_size = ftell(handler);
+       // go back to the start of the file
+       rewind(handler);
+
+       // Allocate a string that can hold it all
+       buffer = (char*) malloc(sizeof(char) * (string_size + 1) );
+
+       // Read it all in one operation
+       read_size = fread(buffer, sizeof(char), string_size, handler);
+
+       // fread doesn't set it so put a \0 in the last position
+       // and buffer is now officially a string
+       buffer[string_size] = '\0';
+
+       if (string_size != read_size)
+       {
+           // Something went wrong, throw away the memory and set
+           // the buffer to NULL
+           free(buffer);
+           buffer = NULL;
+       }
+
+       // Always remember to close the file.
+       fclose(handler);
+    }
+
+    return buffer;
 }
