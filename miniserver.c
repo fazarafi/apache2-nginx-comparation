@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h> // for open
+#include <unistd.h> // for close
 #include <netinet/in.h>
 #include <ev.h>
 
@@ -114,6 +116,7 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents){
   {
     // Stop and free watchet if client socket is closing
     ev_io_stop(loop,watcher);
+    close(watcher->fd);
     free(watcher);
     perror("peer might closing");
     total_clients --; // Decrement total_clients count
@@ -124,29 +127,31 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents){
   {
     printf("message:%s\n",buffer);
   }
-  printf("%s",buffer);
-  
-  char* httpHeader = 
+
+  char* httpHeader =
       "HTTP/1.1 200 OK\n"
       "Content-type: text/html\n"
       "\n";
-  
-  
-  char *externalHtml = readFile("test_2.html");
-  
-  if (externalHtml)
-  {
+
+      // char *externalHtml = readFile("content/file_20kb.html");
+      char *externalHtml = readFile("content/file_20kb.html");
+  if (externalHtml) {
       char* httpResponse;
-      httpResponse = malloc(strlen(httpHeader)+1+strlen(externalHtml)); 
+      httpResponse = malloc(strlen(httpHeader)+1+strlen(externalHtml));
       strcpy(httpResponse, httpHeader);
       strcat(httpResponse,externalHtml);
-      
+
       int len = strlen(httpResponse);
       send(watcher->fd, httpResponse, len, 0);
       bzero(buffer, read);
-      
+
       free(httpResponse);
       free(externalHtml);
+
+      ev_io_stop(loop,watcher);
+      close(watcher->fd);
+      free(watcher);
+
   }
 }
 
