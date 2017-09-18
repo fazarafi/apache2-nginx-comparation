@@ -31,27 +31,27 @@ Sedangkan untuk menghitung load memory akibat concurrent request yang dilakukan.
 ### B. Perbandingan Performa Server Nginx dan Apache2
 ##### Response time rata-rata dari server Nginx
 - ###### Untuk Response File 500 byte
-<<Gambar Dashboard Jmeter>>
+![](graph/nginx_time_500b.png)
 - ###### Untuk Response File 20 kilobyte
-<<Gambar Dashboard Jmeter>>
+![](graph/nginx_time_20kb.png)
 
 ##### Response time rata-rata dari server Apache2
 - ###### Untuk Response File 500 byte
-<<Gambar Dashboard Jmeter>>
+![](graph/apache2_time_500b.png)
 - ###### Untuk Response File 20 kilobyte
-<<Gambar Dashboard Jmeter>>
+![](graph/apache2_time_20kb.png)
 
 ##### Memory usage dari server Nginx
 - ###### Untuk Response File 500 byte
-<<Gambar Dashboard Jmeter>>
+![](graph/nginx_memory_500b.png)
 - ###### Untuk Response File 20 kilobyte
-<<Gambar Dashboard Jmeter>>
+![](graph/nginx_memory_20kb.png)
 
-##### Memory usage dari server Nginx
+##### Memory usage dari server Apache2
 - ###### Untuk Response File 500 byte
-<<Gambar Dashboard Jmeter>>
+![](graph/apache2_memory_500b.png)
 - ###### Untuk Response File 20 kilobyte
-<<Gambar Dashboard Jmeter>>
+![](graph/apache2_memory_20kb.png)
 
 ### C. Performa Event Based Server Menggunakan Libev
 
