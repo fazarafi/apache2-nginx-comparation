@@ -26,7 +26,7 @@ Sedangkan untuk menghitung load memory akibat concurrent request yang dilakukan.
 - Mengaktifkan ServerAgent di host pada Port 4444
 - Test di Run
 
-<<Gambar Dashboard Jmeter>>
+![](graph/dasboard.png)
 
 ### B. Perbandingan Performa Server Nginx dan Apache2
 ##### Response time rata-rata dari server Nginx
