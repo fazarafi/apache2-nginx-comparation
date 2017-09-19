@@ -33,7 +33,14 @@ Sebelum menjalankan server, kita  compile terlebih dahulu server, lalu kita jala
 ```sh
 $ make clean
 $ make
-$ make run
+```
+Untuk pemilihan server yang akan me-respon file html 20kb, command yang dijalankan adalah
+```sh
+$ make run20kb
+```
+Sedangkan untuk pemilihan server yang akan me-respon file html 20kb, command yang dijalankan adalah
+```sh
+$ make run500b
 ```
 Lalu, pada browser yang kita buka, buat request yang akan memunculkan file html yang berada pada server
 ```sh
