@@ -13,9 +13,17 @@ int total_clients = 0;  // Total number of connected clients
 void accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
 void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
 char* readFile(char *filename);
+char* parameter;
 
-int main()
+int main(int argc, char** argv)
 {
+  if (!(!strcmp(argv[1],"20kb") || !strcmp (argv[1],"500b"))) {
+    printf("Please use \"20kb\" or \"500kb\" as second parameter\n");
+    return 0;
+  }
+  else {
+    parameter = argv[1];
+  }
   struct ev_loop *loop = ev_default_loop(0);
   int sd;
   struct sockaddr_in addr;
@@ -132,9 +140,14 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents){
       "HTTP/1.1 200 OK\n"
       "Content-type: text/html\n"
       "\n";
+      char *externalHtml = "";
+      if (!strcmp(parameter,"20kb")) {
+        externalHtml = readFile("content/file_20kb.html");
+      }
+      else {
+        externalHtml = readFile("content/file_500b.html");
+      }
 
-      // char *externalHtml = readFile("content/file_20kb.html");
-      char *externalHtml = readFile("content/file_20kb.html");
   if (externalHtml) {
       char* httpResponse;
       httpResponse = malloc(strlen(httpHeader)+1+strlen(externalHtml));
